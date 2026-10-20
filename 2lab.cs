@@ -11,7 +11,7 @@ namespace lab
         void BuildChocolates();
         void BuildWafers();
         void BuildDragee();
-        void Reset()
+        void Reset();
     }
 
     public class LasunkaBuilder : IGiftSetBuilder
@@ -31,7 +31,7 @@ namespace lab
         }
         public void BuildLollipops()
         {
-            this._product.AddCandy("Льодяники", 0.450); 
+            this._product.AddCandy("Льодяники", 0.450);
         }
         public void BuildChocolates()
         {
@@ -116,7 +116,7 @@ namespace lab
         }
         public void BuildChocolates()
         {
-            this._product.AddCandy("Шоколадні цукерки", 0.550); 
+            this._product.AddCandy("Шоколадні цукерки", 0.550);
         }
 
         public void BuildWafers()
@@ -137,7 +137,7 @@ namespace lab
         }
     }
 
- 
+
     public class GiftSet
     {
         public string Name { get; set; } = "Без назви";
@@ -148,21 +148,20 @@ namespace lab
         }
         public string GetDetails(Dictionary<string, double> pricesPerKg)
         {
-            string str =  $"Набір: «{this.Name}»\n";
+            string str = $"Набір: «{Name}»\n";
             double totalWeight = 0;
             double totalPrice = 0;
-            for (int i = 0; i < this._parts.Count; i++)
+
+            foreach (var part in _parts)
             {
-                var part = this._parts[i];
-                double price = pricesPerKg.ContainsKey(part.TypeName) ? pricesPerKg[part.TypeName] : 0;//////замінити
-                double cost = part.WeightKg * price;
+                double cost = part.WeightKg * pricesPerKg[part.TypeName];
                 totalWeight += part.WeightKg;
                 totalPrice += cost;
                 str += $" {part.TypeName}: {part.WeightKg:F3} кг ({cost:F2} грн)\n";
             }
+
             str += $"Загальна вага: {totalWeight:F3} кг\n";
             str += $"Загальна вартість: {totalPrice:F2} грн\n";
-
             return str;
         }
     }
@@ -203,19 +202,22 @@ namespace lab
 
             var lasunkaBuilder = new LasunkaBuilder();
             director.Builder = lasunkaBuilder;
-            Console.WriteLine("Пакування стандартного набору #1:");
-            director.BuildFullFeaturedGiftSet();
+            Console.WriteLine("Пакування набору 1:");
+            director.BuildFullSet();
             Console.WriteLine(lasunkaBuilder.GetProduct().GetDetails(pricesPerKg));
             var namynaykoBuilder = new NamynaykoBuilder();
             director.Builder = namynaykoBuilder;
-            Console.WriteLine("Пакування стандартного набору #2:");
-            director.BuildFullFeaturedGiftSet();
+            Console.WriteLine("Пакування набору 2:");
+            director.BuildFullSet();
             Console.WriteLine(namynaykoBuilder.GetProduct().GetDetails(pricesPerKg));
             var panKotskyBuilder = new PanKotskyBuilder();
             director.Builder = panKotskyBuilder;
-            Console.WriteLine("Пакування стандартного набору #3:");
-            director.BuildFullFeaturedGiftSet();
+            Console.WriteLine("Пакування набору 3:");
+            director.BuildFullSet();
             Console.WriteLine(panKotskyBuilder.GetProduct().GetDetails(pricesPerKg));
+
+
+            Console.ReadKey();
         }
     }
 }
